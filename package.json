@@ -1,0 +1,23 @@
+{
+  "name": "mondium-cje",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "express": "^4.17.1",
+    "express-react-views": "^0.11.0",
+    "node-fetch": "^3.0.0",
+    "node-schedule": "^2.0.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "sqlite": "^4.0.23",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
