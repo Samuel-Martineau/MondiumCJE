@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+import truncatise from 'truncatise';
 
 /**
  * @param {Object} param0
@@ -19,7 +20,7 @@ function Index({ articlesByDay }) {
           crossOrigin="true"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Montserrat:wght@400;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Montserrat:wght@400;600;800&display=swap"
           rel="stylesheet"
         />
         <link rel="stylesheet" href="/styles.css" />
@@ -29,21 +30,31 @@ function Index({ articlesByDay }) {
         <h1 id="logo">MondiumCJE</h1>
         <hr />
         <h1>&#128478; Articles</h1>
-        <div id="article-container">
+        <section>
           {articlesByDay.map(([day, articles], i) => (
             <div key={i}>
               <h2>{day}</h2>
-              {articles.map(({ title, body, image, date }, j) => (
-                <div className="article" key={j}>
-                  <h3>{title}</h3>
-                  <hr />
-                  <img src={image} alt="article-image" />
-                  <p dangerouslySetInnerHTML={{ __html: body }} />
-                </div>
-              ))}
+              <div id="article-container">
+                {articles.map(({ title, url, body, image, date }, j) => (
+                  <div className="article" key={j}>
+                    <h3>
+                      <a href={url} target="_blank">
+                        {title}
+                      </a>
+                    </h3>
+                    <hr />
+                    <img src={image} alt="article-image" />
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: truncatise(body),
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
-        </div>
+        </section>
       </body>
     </html>
   );
