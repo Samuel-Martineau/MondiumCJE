@@ -16,6 +16,7 @@ const db = await sqlite.open({
   driver: sqlite3.Database,
 });
 await createDBSchema();
+await updateArticles();
 
 const app = express();
 
@@ -39,7 +40,7 @@ async function createDBSchema() {
   );
 }
 
-schedule.scheduleJob('*/5 7-8 * * 1-5', async function () {
+schedule.scheduleJob('*/5 7 * * 1-5', async function () {
   if (await schoolToday()) {
     console.log('Updating articles…');
     await updateArticles();
