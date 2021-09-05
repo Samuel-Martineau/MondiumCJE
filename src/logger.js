@@ -23,7 +23,7 @@ export default class Logger {
    */
   #log(formatMessage, message) {
     const formatDate = clc.whiteBright;
-    const date = `[${new Date().toLocaleString()}]`;
+    const date = `[${new Date().toLocaleString("en-us", { hour12: false })}]`;
 
     console.log(`${formatDate(date)} ${formatMessage(message)}`);
   }

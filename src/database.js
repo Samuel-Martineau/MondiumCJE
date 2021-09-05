@@ -40,7 +40,7 @@ export default class Database {
     });
 
     await this.#db.exec(
-      sql`CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY AUTOINCREMENT, rank INTEGER, title TEXT, url TEXT, body TEXT, image TEXT, date INTEGER);`
+      sql`CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY AUTOINCREMENT, rank INTEGER, url TEXT, title TEXT, description TEXT, body TEXT, image TEXT, date INTEGER);`
     );
 
     logger.info("Successfully initialized DB");
@@ -80,27 +80,36 @@ export default class Database {
 
     const articles = await Promise.all(
       $("div.main-col article")
-        .map(async function (i) {
-          const articleUrl = new URL(
-            $("a", this).attr("href"),
-            rdiUrl
-          ).toString();
-          const articleHtml = await (await fetch(articleUrl)).text();
-          const $article = cheerio.load(articleHtml);
-          $article(".signature-container-top").remove();
+        .map(
+          /**
+           * @returns {Promise<ArticleWithoutId>}
+           */
+          async function (i) {
+            const articleUrl = new URL(
+              $("a", this).attr("href"),
+              rdiUrl
+            ).toString();
+            const articleHtml = await (await fetch(articleUrl)).text();
+            const $article = cheerio.load(articleHtml);
+            $article(".signature-container-top").remove();
 
-          return {
-            title: $(".container-main-card header", this).contents().text(),
-            url: articleUrl,
-            image: $(".container-image img", this)
-              .attr("src")
-              .replace("q_auto,w_100", "q_auto,w_635")
-              .replace("1x1", "16x9"),
-            body: $article("main.document-simple-redactional-container").html(),
-            date: new Date(),
-            rank: i + 1,
-          };
-        })
+            return {
+              url: articleUrl,
+              image: $(".container-image img", this)
+                .attr("src")
+                .replace("q_auto,w_100", "q_auto,w_635")
+                .replace("1x1", "16x9"),
+              title: $(".container-main-card header", this).contents().text(),
+              description: $(".container-main-card p", this).contents().text(),
+              body:
+                $article("main.document-simple-redactional-container").html() ??
+                $article(".text-content").html() ??
+                "Impossible de charger le contenu de l'article",
+              date: new Date(),
+              rank: i + 1,
+            };
+          }
+        )
         .get()
         .slice(0, 5)
     );
@@ -130,12 +139,12 @@ export default class Database {
   /**
    * @param {ArticleWithoutId} article
    */
-  async #saveArticle({ rank, title, url, body, image, date }) {
+  async #saveArticle({ rank, url, title, description, body, image, date }) {
     if (!(await this.#isArticleSaved(title))) {
       logger.info(`Saving article "${title}"`);
 
       await this.#db.run(
-        sql`INSERT INTO articles (rank, title, url, body, image, date) VALUES (${rank}, ${title}, ${url}, ${body}, ${image}, ${
+        sql`INSERT INTO articles (rank, url, title, description, body, image, date) VALUES (${rank}, ${url}, ${title}, ${description}, ${body}, ${image}, ${
           date.getTime() / 1000
         })`
       );
@@ -147,11 +156,12 @@ export default class Database {
   /**
    * @returns {Article}
    */
-  #parseArticle({ id, rank, title, url, body, image, date }) {
+  #parseArticle({ id, rank, url, title, description, body, image, date }) {
     return {
       id,
       rank,
       title,
+      description,
       url,
       body,
       image,

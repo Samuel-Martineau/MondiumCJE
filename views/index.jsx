@@ -50,14 +50,16 @@ function Index({ articlesByDay }) {
             <div key={i}>
               <h2>{day}</h2>
               <div id="article-container">
-                {articles.map(({ title, url, body, image, date }, j) => (
+                {articles.map(({ title, url, body, image, description }, j) => (
                   <div className="article" key={j}>
                     <h3>
                       <a href={url} target="_blank">
                         {title}
                       </a>
                     </h3>
-                    <br />
+                    <p>
+                      <em>{description}</em>
+                    </p>
                     <img src={image} alt="article-image" />
                     <p
                       dangerouslySetInnerHTML={{

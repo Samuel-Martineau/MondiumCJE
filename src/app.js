@@ -19,8 +19,6 @@ async function main() {
     await database.saveArticles();
     logger.info("Successfully updated articles");
   });
-
-  await database.saveArticles();
 }
 
 main().catch(logger.error.bind(logger));

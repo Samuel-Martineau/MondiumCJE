@@ -1,8 +1,9 @@
 /**
  * @typedef {Object} ArticleWithoutId
  * @property {number} rank
- * @property {string} title
  * @property {string} url
+ * @property {string} title
+ * @property {string} description
  * @property {string} body
  * @property {string} image
  * @property {Date} date
