@@ -6,7 +6,7 @@ config();
 const logger = Logger.get();
 
 export const port = parseInt(process.env.PORT || "3000");
-export const calendarUrl = process.env.CALENDAR_URL.trim();
+export const calendarUrl = (process.env.CALENDAR_URL || "").trim();
 export const nodeEnv = process.env.NODE_ENV;
 
 if (calendarUrl === "") logger.warn("Calendar URL not set");
