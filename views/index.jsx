@@ -43,6 +43,22 @@ function Index({ articlesByDay }) {
       </head>
       <body>
         <h1 id="logo">MondiumCJE</h1>
+        <div className="right-aligned">
+          <h3>
+            Source:{" "}
+            <a href="https://ici.radio-canada.ca/international">
+              RDI International
+            </a>
+          </h3>
+          <h4>
+            Site créé par{" "}
+            <a href="https://github.com/Doudou8">Vu Dang Khoa Chiem</a>
+            <br />
+            <a href="https://github.com/Guimauve48">Mathieu Guimond</a>
+            <br />
+            <a href="https://github.com/Samuel-Martineau">Samuel Martineau</a>
+          </h4>
+        </div>
         <hr />
         <h1>&#128478; Articles</h1>
         <section>
