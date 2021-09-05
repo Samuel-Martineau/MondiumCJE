@@ -1,12 +1,27 @@
-import React from 'react';
-import truncatise from 'truncatise';
+import React from "react";
+import truncate from "truncate-html";
 
 /**
- * @param {Object} param0
- * @param {[string, Article[]][]} param0.articlesByDay
+ * @param {Object} data
+ * @param {[string, Article[]][]} data.articlesByDay
  * @returns
  */
 function Index({ articlesByDay }) {
+  /**
+   * @param {string} body
+   */
+  function formatBody(body) {
+    const randomSequence = Math.random();
+
+    return truncate(body, 60, {
+      byWords: true,
+      reserveLastWord: true,
+      ellipsis: randomSequence.toString(),
+    })
+      .trim()
+      .replace(new RegExp(`[.,]?\s*${randomSequence}`), "…");
+  }
+
   return (
     <html lang="en">
       <head>
@@ -42,11 +57,11 @@ function Index({ articlesByDay }) {
                         {title}
                       </a>
                     </h3>
-                    <hr />
+                    <br />
                     <img src={image} alt="article-image" />
                     <p
                       dangerouslySetInnerHTML={{
-                        __html: truncatise(body),
+                        __html: formatBody(body),
                       }}
                     />
                   </div>

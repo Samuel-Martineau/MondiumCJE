@@ -10,4 +10,6 @@ COPY . .
 
 EXPOSE 3000
 
+ENV TZ=America/Toronto
+
 CMD [ "npm", "start" ]
