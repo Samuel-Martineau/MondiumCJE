@@ -5,7 +5,7 @@ import sql from "sql-template-strings";
 import cheerio from "cheerio";
 import fetch from "node-fetch";
 import Logger from "./logger.js";
-import * as config from "./config";
+import * as config from "./config.js";
 
 const logger = Logger.get();
 
