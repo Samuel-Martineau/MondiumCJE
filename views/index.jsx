@@ -85,6 +85,7 @@ function Index({ articlesByDay }) {
                   </div>
                 ))}
               </div>
+              <br />
             </div>
           ))}
         </section>

@@ -43,6 +43,10 @@ export default class Database {
       sql`CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY AUTOINCREMENT, rank INTEGER, url TEXT, title TEXT, description TEXT, body TEXT, image TEXT, date INTEGER);`
     );
 
+    await this.#db.exec(
+      sql`CREATE TABLE IF NOT EXISTS devices (id INTEGER PRIMARY KEY AUTOINCREMENT, identifier TEXT, role TEXT CHECK( role IN ( 'none', 'user', 'admin' )))`
+    );
+
     logger.info("Successfully initialized DB");
   }
 
@@ -99,7 +103,7 @@ export default class Database {
                 .attr("src")
                 .replace("q_auto,w_100", "q_auto,w_635")
                 .replace("1x1", "16x9"),
-              title: $(".container-main-card header", this).contents().text(),
+              title: $article("h1").contents().text(),
               description: $(".container-main-card p", this).contents().text(),
               body:
                 $article("main.document-simple-redactional-container").html() ??

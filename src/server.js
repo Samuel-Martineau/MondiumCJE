@@ -33,7 +33,9 @@ server.disable("x-powered-by");
 server.get("/", async (req, res, next) => {
   try {
     res.render("index", {
-      articlesByDay: Object.entries(await database.getAllArticlesByDay()),
+      articlesByDay: Object.entries(
+        await database.getAllArticlesByDay()
+      ).reverse(),
     });
   } catch (error) {
     next(error);
