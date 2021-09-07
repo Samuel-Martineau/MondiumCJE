@@ -4,8 +4,8 @@ import path from "path";
 import sql from "sql-template-strings";
 import cheerio from "cheerio";
 import fetch from "node-fetch";
-import { dirname } from "./utils.js";
 import Logger from "./logger.js";
+import * as config from "./config";
 
 const logger = Logger.get();
 
@@ -31,11 +31,10 @@ export default class Database {
   }
 
   async init() {
-    const dbPath = path.join(dirname, "..", "db.sqlite3");
-    logger.info(`Initializing SQLite3 DB at ${dbPath}`);
+    logger.info(`Initializing SQLite3 DB at ${config.dbPath}`);
 
     this.#db = await sqlite.open({
-      filename: dbPath,
+      filename: config.dbPath,
       driver: sqlite3.Database,
     });
 
