@@ -6,6 +6,7 @@
  * @property {string} description
  * @property {string} body
  * @property {string} image
+ * @property {string} imageAlt
  * @property {Date} date
  *
  * @typedef {Object} ArticleId

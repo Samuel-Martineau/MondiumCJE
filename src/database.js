@@ -1,6 +1,5 @@
 import sqlite3 from "sqlite3";
 import * as sqlite from "sqlite";
-import path from "path";
 import sql from "sql-template-strings";
 import cheerio from "cheerio";
 import fetch from "node-fetch";
@@ -39,7 +38,7 @@ export default class Database {
     });
 
     await this.#db.exec(
-      sql`CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY AUTOINCREMENT, rank INTEGER, url TEXT, title TEXT, description TEXT, body TEXT, image TEXT, date INTEGER);`
+      sql`CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY AUTOINCREMENT, rank INTEGER, url TEXT, title TEXT, description TEXT, body TEXT, image TEXT, imageAlt TEXT, date INTEGER);`
     );
 
     await this.#db.exec(
@@ -98,10 +97,14 @@ export default class Database {
 
             return {
               url: articleUrl,
-              image: $(".container-image img", this)
-                .attr("src")
-                .replace("q_auto,w_100", "q_auto,w_635")
-                .replace("1x1", "16x9"),
+              image:
+                $(".container-image img", this)
+                  .attr("src")
+                  ?.replace("q_auto,w_100", "q_auto,w_635")
+                  ?.replace("1x1", "16x9") || "",
+              imageAlt: $article(".e-image-legend p:first-child")
+                .contents()
+                .text(),
               title: $article("h1").contents().text(),
               description: $(".container-main-card p", this).contents().text(),
               body:
@@ -142,12 +145,21 @@ export default class Database {
   /**
    * @param {ArticleWithoutId} article
    */
-  async #saveArticle({ rank, url, title, description, body, image, date }) {
+  async #saveArticle({
+    rank,
+    url,
+    title,
+    description,
+    body,
+    image,
+    imageAlt,
+    date,
+  }) {
     if (!(await this.#isArticleSaved(title))) {
       logger.info(`Saving article "${title}"`);
 
       await this.#db.run(
-        sql`INSERT INTO articles (rank, url, title, description, body, image, date) VALUES (${rank}, ${url}, ${title}, ${description}, ${body}, ${image}, ${
+        sql`INSERT INTO articles (rank, url, title, description, body, image, imageAlt, date) VALUES (${rank}, ${url}, ${title}, ${description}, ${body}, ${image}, ${imageAlt}, ${
           date.getTime() / 1000
         })`
       );
@@ -159,7 +171,17 @@ export default class Database {
   /**
    * @returns {Article}
    */
-  #parseArticle({ id, rank, url, title, description, body, image, date }) {
+  #parseArticle({
+    id,
+    rank,
+    url,
+    title,
+    description,
+    body,
+    image,
+    imageAlt,
+    date,
+  }) {
     return {
       id,
       rank,
@@ -168,6 +190,7 @@ export default class Database {
       url,
       body,
       image,
+      imageAlt,
       date: new Date(date * 1000),
     };
   }
