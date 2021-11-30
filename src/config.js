@@ -18,3 +18,4 @@ if (calendarUrl === "") logger.warn("Calendar URL not set");
 if (isNaN(port)) logger.warn("Invalid port");
 if (nodeEnv !== "production") logger.warn("Running in development mode");
 if (!path.isAbsolute(dbPath)) logger.warn("DB Path is not absolute");
+if (!cookieSecret) logger.warn("Cookie Secret is not set");

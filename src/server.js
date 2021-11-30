@@ -67,7 +67,8 @@ server.get("/paiement", async (req, res, next) => {
 
 server.get("*", async (req, res, next) => {
   try {
-    if ((await getDeviceRole(req)) === "none") res.redirect("/paiement");
+    if (!["user", "admin"].includes(await getDeviceRole(req)))
+      res.redirect("/paiement");
     else next();
   } catch (error) {
     next(error);
