@@ -42,7 +42,7 @@ export default class Database {
     );
 
     await this.#db.exec(
-      sql`CREATE TABLE IF NOT EXISTS devices (id INTEGER PRIMARY KEY AUTOINCREMENT, identifier TEXT UNIQUE, role TEXT CHECK( role IN ( 'none', 'user', 'admin' )) DEFAULT 'none')`
+      sql`CREATE TABLE IF NOT EXISTS devices (id INTEGER PRIMARY KEY AUTOINCREMENT, identifier TEXT UNIQUE, role TEXT CHECK( role IN ( 'none', 'user', 'admin' )))`
     );
 
     logger.info("Successfully initialized DB");
@@ -222,7 +222,7 @@ export default class Database {
     logger.info(`Saving device "${identifier}"`);
 
     await this.#db.run(
-      sql`INSERT INTO devices (identifier) VALUES (${identifier})`
+      sql`INSERT INTO devices (identifier, role) VALUES (${identifier}, "none")`
     );
 
     logger.info(`Successfully saved device "${identifier}"`);
