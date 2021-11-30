@@ -12,6 +12,7 @@ export const calendarUrl = (process.env.CALENDAR_URL || "").trim();
 export const nodeEnv = process.env.NODE_ENV;
 export const dbPath =
   process.env.DB_PATH || path.join(dirname, "..", "db.sqlite3");
+export const cookieSecret = process.env.COOKIE_SECRET;
 
 if (calendarUrl === "") logger.warn("Calendar URL not set");
 if (isNaN(port)) logger.warn("Invalid port");

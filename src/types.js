@@ -14,3 +14,10 @@
  *
  * @typedef {ArticleWithoutId & ArticleId} Article
  */
+
+/**
+ * @typedef {Object} Device
+ * @property {number} id
+ * @property {string} identifier
+ * @property {'none' | 'user' | 'admin'} role
+ */

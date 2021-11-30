@@ -42,7 +42,7 @@ export default class Database {
     );
 
     await this.#db.exec(
-      sql`CREATE TABLE IF NOT EXISTS devices (id INTEGER PRIMARY KEY AUTOINCREMENT, identifier TEXT, role TEXT CHECK( role IN ( 'none', 'user', 'admin' )))`
+      sql`CREATE TABLE IF NOT EXISTS devices (id INTEGER PRIMARY KEY AUTOINCREMENT, identifier TEXT UNIQUE, role TEXT CHECK( role IN ( 'none', 'user', 'admin' )) DEFAULT 'none')`
     );
 
     logger.info("Successfully initialized DB");
@@ -203,6 +203,45 @@ export default class Database {
       sql`SELECT * FROM articles ORDER BY rank ASC`
     );
     return rows.map(this.#parseArticle);
+  }
+
+  /**
+   * @param {string} identifier
+   * @returns {Promise<Device>}
+   */
+  async getDeviceByIdentifier(identifier) {
+    return this.#db.get(
+      sql`SELECT * FROM devices WHERE identifier=${identifier}`
+    );
+  }
+
+  /**
+   * @param {string} identifier
+   */
+  async saveDeviceIdentifier(identifier) {
+    logger.info(`Saving device "${identifier}"`);
+
+    await this.#db.run(
+      sql`INSERT INTO devices (identifier) VALUES (${identifier})`
+    );
+
+    logger.info(`Successfully saved device "${identifier}"`);
+  }
+
+  /**
+   * @param {string} identifier
+   * @param {string} role
+   */
+  async promoteDeviceIdentifier(identifier, role) {
+    logger.info(`Promoting device "${identifier}" to role "${role}"`);
+
+    await this.#db.run(
+      sql`UPDATE devices SET role=${role} WHERE identifier=${identifier}`
+    );
+
+    logger.info(
+      `Successfully promoted device "${identifier}" to role "${role}"`
+    );
   }
 }
 
