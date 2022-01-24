@@ -37,39 +37,41 @@ server.disable("x-powered-by");
 
 server.use("*", async (req, res, next) => {
   try {
-    if (!req.signedCookies["identifiant"]) {
-      const identifier = uuidv4();
+    // if (!req.signedCookies["identifiant"]) {
+    //   const identifier = uuidv4();
 
-      await database.saveDeviceIdentifier(identifier);
+    //   await database.saveDeviceIdentifier(identifier);
 
-      res.cookie("identifiant", identifier, {
-        signed: true,
-        maxAge: ms("1 year"),
-      });
-      res.redirect(req.originalUrl);
-    } else next();
+    //   res.cookie("identifiant", identifier, {
+    //     signed: true,
+    //     maxAge: ms("1 year"),
+    //   });
+    //   res.redirect(req.originalUrl);
+    // } else next();
+    next();
   } catch (error) {
     next(error);
   }
 });
 
-server.get("/paiement", async (req, res, next) => {
-  try {
-    if ((await getDeviceRole(req)) !== "none") res.redirect("/");
-    else
-      res.render("paiement", {
-        deviceIdentifier: req.signedCookies["identifiant"],
-      });
-  } catch (error) {
-    next(error);
-  }
-});
+// server.get("/paiement", async (req, res, next) => {
+//   try {
+//     if ((await getDeviceRole(req)) !== "none") res.redirect("/");
+//     else
+//       res.render("paiement", {
+//         deviceIdentifier: req.signedCookies["identifiant"],
+//       });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 server.get("*", async (req, res, next) => {
   try {
-    if (!["user", "admin"].includes(await getDeviceRole(req)))
-      res.redirect("/paiement");
-    else next();
+    // if (!["user", "admin"].includes(await getDeviceRole(req)))
+    //   res.redirect("/paiement");
+    // else next();
+    next();
   } catch (error) {
     next(error);
   }
