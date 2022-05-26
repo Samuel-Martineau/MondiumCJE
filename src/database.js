@@ -117,7 +117,7 @@ export default class Database {
           }
         )
         .get()
-        .slice(0, 5)
+        .slice(0, 4)
     );
 
     await Promise.all(articles.map(this.#saveArticle.bind(this)));
